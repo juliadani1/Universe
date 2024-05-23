@@ -1,0 +1,132 @@
+import flet as ft
+import pandas as pd
+from flet import ElevatedButton
+import threading
+from flet import margin
+from flet import OnScrollEvent
+import threading
+
+class State:
+    i = 1
+
+s = State()
+sem = threading.Semaphore()
+
+def read_excel_file(): 
+    mydatabase = pd.read_excel("database.xlsx", sheet_name="Blad1")
+    return mydatabase
+
+def show_profile_data(profile_id):
+    df = read_excel_file()
+    profile_data = df[df["ID"] == profile_id] 
+    print(profile_data)
+
+def main(page: ft.Page):
+    page.bgcolor=ft.colors.GREEN_100
+    page.vertical_alignment= ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.add(ft.Row([ft.IconButton(icon=ft.icons.ARROW_BACK), ft.Icon(ft.icons.ANCHOR )], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+    page.add(ft.Text("NexTech", weight="bold", size=30))
+    page.add(ft.Text("UX-Designer applicants", weight="bold", size=20))
+    page.add(ft.Text("Database", size=20))
+
+    def myscroll(e:OnScrollEvent):
+        print(e)
+        if e.pixels >= e.max_scroll_extent - 100:
+            if sem.acquire(blocking=False):
+                try:
+                    for b in range(1,10):
+                        body.controls.append(
+                        ft.Container(
+                            bgcolor="white",
+                            border_radius=60,
+                            margin=margin.only(left=50,right=50),
+                            padding=10,
+                            content=ft.ElevatedButton(
+                                f"Profile {s.i}",
+                                on_click=lambda e, profile_id=s.i: show_profile_data(profile_id)
+                            ),
+                            )
+                        )
+                        s.i +=1
+                        body.update()
+                finally:
+                    sem.release()
+
+
+    body = ft.Column(
+        height=500,
+        scroll="always",
+        on_scroll_interval=0,
+        on_scroll=myscroll
+    )
+
+    for x in range(1, 20):
+        body.controls.append(
+            ft.Container(
+                bgcolor="white",
+                border_radius=60,
+                margin=margin.only(left=50, right=50),
+                padding=10,
+                content=ft.ElevatedButton(
+                    f"Profile {s.i}",
+                    on_click=lambda e, profile_id=s.i: show_profile_data(profile_id)
+                )
+            )
+        )
+
+        s.i += 1
+
+    scrollable_container = ft.Container(
+    content=body,
+    width=100,  
+    height=700,
+    expand=True 
+    )
+
+    page.add(
+        ft.Column([
+            ft.Text(weight="bold", size=30),
+            ft.Container(
+                bgcolor="white",
+                padding=10,
+                content=body
+            )
+        ])
+    )
+
+    datatable = ft.DataTable(
+        columns=[
+        ft.DataColumn(ft.Text("ID")),
+        ft.DataColumn(ft.Text("Age")),  
+        ft.DataColumn(ft.Text("Education")),
+        ft.DataColumn(ft.Text("Skills")), 
+        ft.DataColumn(ft.Text("Actions")), 
+        ],
+        rows=[]
+
+    )
+    
+    def create_button(data_text):
+        return ft.ElevatedButton(
+            "Show select data",
+            data=ft.Text(data_text),
+            on_click=lambda e: show_profile_data(data_text.split(':')[0].strip())
+        )
+
+    for x in read_excel_file().iterrows():
+            datatable.rows.append(
+                ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(str(x[1]["ID"]))),
+                    ft.DataCell(ft.Text(str(x[1]["age"]))),
+                    ft.DataCell(ft.Text(str(x[1]["education"]))),
+                    ft.DataCell(ft.Text(str(x[1]["skills"]))),
+                    ft.DataCell(create_button(f"{x[1]['ID']} - {x[1]['age']} - {x[1]['education']} - {x[1]['skills']}"))
+                ]
+            )
+        )
+            
+
+
+ft.app(main)
