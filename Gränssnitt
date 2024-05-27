@@ -1,0 +1,92 @@
+import flet as ft
+from flet import ElevatedButton
+
+def main(page: ft.Page):
+    page.bgcolor=ft.colors.GREEN_100
+    page.vertical_alignment= ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.add(ft.Row([ft.IconButton(icon=ft.icons.ARROW_BACK), ft.Icon(ft.icons.ANCHOR )], alignment=ft.MainAxisAlignment.SPACE_BETWEEN))
+    page.add(ft.Text("NexTech", size=20))
+    page.add(ft.Text("UX-Designer applicants", size=15))
+    page.add(ft.Text("Most compatible"))
+
+    page.add(
+        ft.Card(
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.ListTile(
+                            leading=ft.Icon(ft.icons.PORTRAIT),
+                            title=ft.Text("Profile 1:")
+                        ),
+                        
+                                ft.Text("Age:28"),
+                                ft.Text("Education: B.Sc student at Gothenburg University"),
+                                ft.Text("Skills: Python, UX-certificate, Figma"),
+
+                        ft.Row(
+                            [ ft.IconButton(ft.icons.ARROW_DROP_DOWN)],
+                            alignment=ft.MainAxisAlignment.END,
+                        ),
+                    ]
+                ),
+                height=185,
+                width=400,
+                padding=10,
+            )
+        )
+    )
+    page.add(
+        ft.Card(
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.ListTile(
+                            leading=ft.Icon(ft.icons.PORTRAIT),
+                            title=ft.Text("Profile 2:")
+                        ),
+                        
+                                ft.Text("Age:28"),
+                                ft.Text("Education: B.Sc student at Gothenburg University"),
+                                ft.Text("Skills: Python, Scrum-master, Figma"),
+
+                        ft.Row(
+                            [ ft.IconButton(ft.icons.ARROW_DROP_DOWN)],
+                            alignment=ft.MainAxisAlignment.END,
+                        ),
+                    ]
+                ),
+                height=185,
+                width=400,
+                padding=10,
+            )
+        )
+    )
+    page.add(
+        ft.Card(
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.ListTile(
+                            leading=ft.Icon(ft.icons.PORTRAIT),
+                            title=ft.Text("Profile 3:")
+                        ),
+                        
+                                ft.Text("Age:28"),
+                                ft.Text("Education: B.Sc student at Gothenburg University"),
+                                ft.Text("Skills: Python, Java"),
+
+                        ft.Row(
+                            [ ft.IconButton(ft.icons.ARROW_DROP_DOWN)],
+                            alignment=ft.MainAxisAlignment.END,
+                        ),
+                    ]
+                ),
+                height=185,
+                width=400,
+                padding=10,
+            )
+        )
+    )
+    
+ft.app(main)
